@@ -9,5 +9,5 @@ upodi.setKey('UPODI JS KEY HERE');'
 
 and you have to insert your READ/WRITE key in 'handleUserData.js' at 2 places here
 ```javascript
-    xhr.setRequestHeader('Authorization', "bearer " + btoa('A NORMAL READ/WRITE API KEY HERE'));
+xhr.setRequestHeader('Authorization', "bearer " + btoa('A NORMAL READ/WRITE API KEY HERE'));
 ```
