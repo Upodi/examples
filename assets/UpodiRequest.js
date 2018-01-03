@@ -1,14 +1,19 @@
+/**
+ * This is a class representation of all the api calls for the Upodi API in javascript. Also includes some extra methods that uses api calls.
+ * @class UpodiRequest UpodiRequest
+ * @param {string} apiKey 
+ */
 function UpodiRequest(apiKey) {
 
     //API key straight from the platform
-    this.apiKey = typeof(apiKey) == "string" ? apiKey : undefined;
+    this.apiKey = typeof(apiKey) == "string" ? apiKey :undefined;
 
     /**
      * Request method for any HTTP request to the a server.
-     * @HTTPMethod : "PUT", "GET" or "POST" to define which method to use.
-     * @address : The URL for the request to be sent to.
-     * @callBack : The method to callback on the return of the request.
-     * @data : Optional if data is needed to be sent through the request's body.
+     * @param {string} HTTPMethod "PUT", "GET" or "POST" to define which method to use.
+     * @param {string} address The URL for the request to be sent to.
+     * @param {function} callBack The method to callback on the return of the request.
+     * @param {JSON} data Optional if data is needed to be sent through the request's body.
      */
     this.request = function(HTTPMethod, address, callBack, data) {
         //Store the data
@@ -69,7 +74,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to get all customers from the Upodi Server
-     * @callback : The callback method to run when the request returns.
+     * @param {function} callBack The callback method to run when the request returns.
      */
     this.getAllCustomers = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/customers", function(customers) {
@@ -80,8 +85,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to get a customer by AccountNumber.
-     * @accountNumber : The accountNumber you want to search for
-     * @callBack : The function to be run once the request returns.
+     * @param {string} accountNumber The accountNumber you want to search for
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.getCustomerByAccountNumber = function(accountNumber, callBack) {
         this.request("GET", "https://api.upodi.io/v2/customers/" + accountNumber + "/accountnumber/", function(customer) {  
@@ -91,8 +96,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to get a customer by the GUID used by upodi backend
-     * @ID : The id to look for.
-     * @callBack : The function to be run once the request returns.
+     * @param {string} ID The id to look for.
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.getCustomerByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/customers/" + ID, function(customer) {
@@ -102,9 +107,9 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to create a customer through the API.
-     * @data : Minimum requirement for data to create a customer is "fullname" check https://docs.upodi.com/reference#customer-object for reference to customer object.
+     * @param {JSON} data Minimum requirement for data to create a customer is "fullname" check https://docs.upodi.com/reference#customer-object for reference to customer object.
      * Also the data must be in JSON format
-     * @callBack : The function to be run once the request returns.
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.createCustomer = function(data, callBack) {
         if(typeof(data) != 'object') {
@@ -125,7 +130,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to delete customer by ID
-     * @ID : The ID to delete.
+     * @param {string} ID The ID to delete.
      */
     this.deleteCustomerByID = function(ID) {
         this.request("DELETE", "https://api.upodi.io/v2/customers/" + ID, function(){});
@@ -133,7 +138,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Method to delete customer by AccountNumber
-     * @accountNumber : The accountNumber to delete.
+     * @param {string} accountNumber The accountNumber to delete.
      */
     this.deleteCustomerByAccountNumber = function(accountNumber) {
         var object = this;
@@ -148,15 +153,15 @@ function UpodiRequest(apiKey) {
 
     /**
      * Assign a cardtoken to a customer by ID.
-     * @ID : The ID to assign the cardToken to.
-     * @token : The cardToken to assign.
-     * @makeDefault : Decide wether or not to make the card default or not
-     * @callBack : Optional callback in case you want to run something after card token has been assigned.
+     * @param {string} ID The ID to assign the cardToken to.
+     * @param {string} token The cardToken to assign.
+     * @param {boolean} makeDefault Decide wether or not to make the card default or not
+     * @param {function} callBack Optional callback in case you want to run something after card token has been assigned.
      */
     this.assignCardTokenByID = function(ID, token, makeDefault, callBack) {
         var data = {
-            "token" : token,
-            "makedefault" : makeDefault
+            "token" :token,
+            "makedefault" :makeDefault
         }
         this.request("PUT", "https://api.upodi.io/v2/customers/"+ ID + "/assigncardtoken/", function(){
             if(callBack != undefined) {
@@ -171,7 +176,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get all subscriptions
-     * @callBack : The function to be run one the data returns.
+     * @param {function} callBack The function to be run one the data returns.
      */
     this.getAllSubscriptions = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/subscriptions", function(subscriptions) {
@@ -181,8 +186,8 @@ function UpodiRequest(apiKey) {
     
     /**
      * Get subscriptions from customerID 
-     * @ID : The ID of the customer to find.
-     * @callBack : The function to run once the data returns.
+     * @param {string} ID The ID of the customer to find.
+     * @param {function} callBack The function to run once the data returns.
      */
     this.getSubscriptionsByCustomerID = function(ID, callBack) {
          this.getCustomerByID(ID, function(customer) {
@@ -192,8 +197,8 @@ function UpodiRequest(apiKey) {
 
      /**
       * Get subscription froma customers AccountNumber
-      * @AccountNumber : The accountNumber to search for.
-      * @callBack : The function to be run once the data returns.
+      * @param {string} accountNumber The accountNumber to search for.
+      * @param {function} callBack The function to be run once the data returns.
       */
     this.getSubscriptionsByAccountNumber = function(accountNumber, callBack) {
         this.getCustomerByAccountNumber(accountNumber, function(customer) {
@@ -203,8 +208,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get subscription by subscriptionID
-     * @ID : The subscriptionID to search for
-     * @callBack : The method to run once the data returns.
+     * @param {string} ID The subscriptionID to search for
+     * @param {function} callBack The method to run once the data returns.
      */
     this.getSubscriptionByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/subscriptions/" + ID, function(subscription) {
@@ -214,8 +219,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Create a new subscriptions 
-     * @subscriptionObject : The object to be posted to create a new subscription. See this link for more info of what it contains https://docs.upodi.com/v1.0/reference#subscription-object
-     * @callBack : The method to be run once the subscription has been created the retun of the request will return the newly created subscription ID.
+     * @param {JSON} subscriptionObject The object to be posted to create a new subscription. See this link for more info of what it contains https://docs.upodi.com/v1.0/reference#subscription-object
+     * @param {function} callBack The method to be run once the subscription has been created the retun of the request will return the newly created subscription ID.
      */
     this.createNewSubscription = function(subscriptionObject, callBack) {
         this.request("POST", "https://api.upodi.io/v2/subscriptions", function(subscriptionID) {
@@ -225,8 +230,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Activate a draft or hold subscription with a subscription ID
-     * @ID : The ID of the subscription to be activated.
-     * @callBack : Optional callback function to be run after the subscription has been activated
+     * @param {string} ID The ID of the subscription to be activated.
+     * @param {function} callBack Optional callback function to be run after the subscription has been activated
      */
     this.activateSubscription = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptions/" + ID + "/activate/", function(result) {
@@ -238,9 +243,9 @@ function UpodiRequest(apiKey) {
 
     /**
      * Switch a plan of a subscription from one to another
-     * @subscriptionID : The ID of the subscription to be switched
-     * @planID : The plan ID to switch the subscription to.
-     * @callBack : Optional callback function to be run after the subscription plans has switched.
+     * @param {string} subscriptionID The ID of the subscription to be switched
+     * @param {string} planID The plan ID to switch the subscription to.
+     * @param {function} callBack Optional callback function to be run after the subscription plans has switched.
      */
     this.switchSubscriptionPlan = function(subscriptionID, planID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptions/" + subscriptionID + "/switchplan/", function(result){
@@ -252,8 +257,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Cancel an active subscription subscription with a subscription ID
-     * @ID : The id of the subscription to cancel
-     * @callBack : Optional callback function to be run after the subscription has been canceled.
+     * @param {string} ID The id of the subscription to cancel
+     * @param {function} callBack Optional callback function to be run after the subscription has been canceled.
      */
     this.cancelSubscription = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptions/" + ID + "/cancel/", function(result) {
@@ -265,8 +270,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Hold an active subscription from a subscriptionID
-     * @ID : The ID of the subscription to hold
-     * @callBack : Optional callback function to be run after the subscription has been put on hold.
+     * @param {string} ID The ID of the subscription to hold
+     * @param {function} callBack Optional callback function to be run after the subscription has been put on hold.
      */
     this.holdSubscription = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptions/" + ID +"/hold/", function(result) {
@@ -278,8 +283,8 @@ function UpodiRequest(apiKey) {
     
     /**
      * Expire an active or hold subscription
-     * @ID : The ID of the subscription to be expired
-     * @callBack : Optional callback function to be run after the subscription has been set to expire
+     * @param {string} ID The ID of the subscription to be expired
+     * @param {function} callBack Optional callback function to be run after the subscription has been set to expire
      */
     this.expireSubscription = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptions/" + ID +"/expire/", function(result) {
@@ -294,7 +299,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get all discounts
-     * @callBack : The function to run once the data returns.
+     * @param {function} callBack The function to run once the data returns.
      */
     this.getAllDiscounts = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/discounts", function(discounts) {
@@ -305,8 +310,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get discount by ID
-     * @ID : The ID of the discount to search for.
-     * @callBack : The function to be run once the data returns.
+     * @param {string} ID The ID of the discount to search for.
+     * @param {function} callBack The function to be run once the data returns.
      */
     this.getDiscountByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/discounts/", function(discounts) {
@@ -317,9 +322,9 @@ function UpodiRequest(apiKey) {
 
     /**
      * Apply discount code to customer.
-     * @ID : The customer ID to apply the code to.
-     * @discountCode : The discount code object.
-     * @callBack : Optional callback method to call after the discount code has been applied.
+     * @param {string} ID The customer ID to apply the code to.
+     * @param {string} discountCode The discountCode
+     * @param {function} callBack Optional callback method to call after the discount code has been applied.
      */
     this.applyDiscountToCustomer = function(ID, discountCode, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/discounts/" + ID +"/applydiscountcodecustomer", function(result){
@@ -334,7 +339,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get all invoices.
-     * @callBack : The function to be run once the request returns.
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.getAllInvoices = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/invoices", function(result) {
@@ -344,8 +349,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get one invoice by the invoiceID.
-     * @ID : The ID of the invoice to be recieved.
-     * @callBack : The function to be run once the request returns.
+     * @param {string} ID The ID of the invoice to be recieved.
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.getInvoiceByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/invoices/" + ID, function(result) {
@@ -355,8 +360,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get one invoice from the invoiceNumber.
-     * @invoiceNumber : The invoicenumber of the invoice to be recieved.
-     * @callBack : The function to be run once the request returns.
+     * @param {string} invoiceNumber The invoicenumber of the invoice to be recieved.
+     * @param {function} callBack The function to be run once the request returns.
      */
     this.getInvoiceByInvoiceNumber = function(invoiceNumber, callBack) {
         this.request("GET", "https://api.upodi.io/v2/invoices/" + invoiceNumber + "/number/", function(result) {
@@ -366,8 +371,8 @@ function UpodiRequest(apiKey) {
     
     /**
      * Mark an invoice as paid.
-     * @ID : The ID of the invoice to be marked as paid.
-     * @callBack : Optional function to be run once the invoice is marked as paid.
+     * @param {string} ID The ID of the invoice to be marked as paid.
+     * @param {function} callBack Optional function to be run once the invoice is marked as paid.
      */
     this.markInvoicePaid = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/invoices/" + ID + "/markpaid/", function(result) {
@@ -377,8 +382,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Mark an invoice as canceled.
-     * @ID : The ID of the invoice to marked canceled.
-     * @callBack : Optional function to be run once the invoice is marked as canceled.
+     * @param {string} ID The ID of the invoice to marked canceled.
+     * @param {function} callBack Optional function to be run once the invoice is marked as canceled.
      */
     this.markInvoiceCanceled = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/invoices/" + ID + "/cancel/", function(result) {
@@ -388,8 +393,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Recharge an failed payment of an invoice.
-     * @ID : The ID of the invoice to be recharged.
-     * @callBack : Optional function to be run once the invoice is marked as canceled.
+     * @param {string} ID The ID of the invoice to be recharged.
+     * @param {function} callBack Optional function to be run once the invoice is marked as canceled.
      */
     this.rechargeFailedPayment = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/invoices/" + ID +"/recharge/", function(result) {
@@ -401,7 +406,7 @@ function UpodiRequest(apiKey) {
     
     /**
      * Get all subscriptioncharges.
-     * @callBack : The method to be called once the request returns.
+     * @param {function} callBack The method to be called once the request returns.
      */
     this.getAllSubscriptionCharges = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/subscriptionCharges", function(result) {
@@ -411,8 +416,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get Subscriptioncharge by ID.
-     * @ID : The ID of the subscriptioncharge to search for.
-     * @callBack : The callBack method to be run once the request returns.
+     * @param {string} ID The ID of the subscriptioncharge to search for.
+     * @param {function} callBack The callBack method to be run once the request returns.
      */
     this.getSubscriptionChargeById = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/subscriptionCharges/" + ID, function(result) {
@@ -422,9 +427,9 @@ function UpodiRequest(apiKey) {
 
     /**
      * Set amount of specific subscriptioncharge
-     * @ID : The ID of the subscription charge to set amount for.
-     * @amunt : The amount to set charge to.
-     * @callBack : Optional method to be run once the amount has been set.
+     * @param {string} ID The ID of the subscription charge to set amount for.
+     * @param {number} amount The amount to set charge to.
+     * @param {function} callBack Optional method to be run once the amount has been set.
      */
     this.setAmountByID = function(ID, amount, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptionCharges/" + ID + "/setamount/", function() {
@@ -437,10 +442,10 @@ function UpodiRequest(apiKey) {
     /**
      * Set amount of subscriptioncharge with specific SKU.
      * THE SKU OF THE SUBSCRIPTIONCHARGE IS THE ONE THAT IS FOUND IN THE PRODUCTPLANCHARGE.
-     * @SKU : The SKU to look for.
-     * @ID : The subscription ID
-     * @amount : The Amount to set the charge to.
-     * @callBack : Optional callback method to be run once the amount has been set.
+     * @param {number} SKU The SKU to look for.
+     * @param {string} ID The subscription ID
+     * @param {number} amount The Amount to set the charge to.
+     * @param {function} callBack Optional callback method to be run once the amount has been set.
      */
     this.setAmountOfSubscriptionBySKU = function(SKU, ID, amount, callBack) {
         var object = this;
@@ -461,8 +466,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Hold specific subscriptioncharge.
-     * @ID : The ID of the subscriptioncharge to be put on hold.
-     * @callBack : Optional callback method to be run once the charge has been set on hold.
+     * @param {string} ID The ID of the subscriptioncharge to be put on hold.
+     * @param {function} callBack Optional callback method to be run once the charge has been set on hold.
      */
     this.holdSubscriptionCharge = function(ID, callBack) {
         this.request("PUT", "https://api.upodi.io/v2/subscriptionCharges/" + ID +"/hold/", function() {
@@ -476,7 +481,7 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get all productplans.
-     * @callBack : The method to be called once the request returns.
+     * @param {function} callBack The method to be called once the request returns.
      */
     this.getAllProductplans = function(callBack) {
         this.request("GET", "https://api.upodi.io/v2/productplans", function(result) {
@@ -486,8 +491,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get proudctplan by id.
-     * @ID : The id of the productplan to lookup.
-     * @callBack : The method to be called once the request returns.
+     * @param {string} ID The id of the productplan to lookup.
+     * @param {function} callBack The method to be called once the request returns.
      */
     this.getProductPlanByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/productplans/" + ID, function(result) {
@@ -497,8 +502,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Duplicate product plan by id.
-     * @ID : THE id of the productplan to be duplicated.
-     * @callBack : Optional method to be called once the request returns.
+     * @param {string} ID THE id of the productplan to be duplicated.
+     * @param {function} callBack Optional method to be called once the request returns.
      */
     this.duplicateProductPlan = function(ID, callBack) {
         this.request("https://api.upodi.io/v2/productplans/" + ID + "/duplicate", function() {
@@ -512,7 +517,7 @@ function UpodiRequest(apiKey) {
     
     /**
      * Get all transactions.
-     * @callBack : The method to be run once the request returns.
+     * @param {function} callBack The method to be run once the request returns.
      */
     this.getAllTransactions = function(callBack) {
         this.request("GET",  "https://api.upodi.io/v2/transactions", function(result) {
@@ -522,8 +527,8 @@ function UpodiRequest(apiKey) {
 
     /**
      * Get transactions by ID.
-     * @ID : The ID to look for in transactions.
-     * @callBack : The method to be run once the request returns.
+     * @param {string} ID The ID to look for in transactions.
+     * @param {function} callBack The method to be run once the request returns.
      */
     this.getTransactionsByID = function(ID, callBack) {
         this.request("GET", "https://api.upodi.io/v2/transactions/" + ID, function(result) {
