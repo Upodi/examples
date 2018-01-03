@@ -1,2 +1,2 @@
-#Javascript assets
-Here you can find assets for the Upodi API or other javascript assets that someway connect to Upodi.
+# Javascript assets
+Here you can find different javascript assets that can be used on your end to make connection with the api easier.
